@@ -3,8 +3,18 @@ const fileDb = require('../fileDb');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    const messages = fileDb.getMessages().slice(-30);
-    res.send(messages);
+    const messages = fileDb.getMessages();
+    const date = req.query.datetime;
+    const queryArray = [];
+    if(date) {
+        messages.map(m => {
+            if(m.datetime > date) {
+                return queryArray.push(m)
+            }
+        });
+        return res.send(queryArray)
+    }
+    res.send(messages.slice(-30));
 });
 
 router.post('/', (req, res) => {

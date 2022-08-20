@@ -4,11 +4,14 @@ import {createMessage, fetchMessages} from "../../store/actions/messagesActions"
 import {Button, Grid} from "@mui/material";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import Message from "../../components/Message/Message";
+import axiosApi from "../../axiosApi";
 
 const Messages = () => {
     const dispatch = useDispatch();
     const globalStateMessages = useSelector(state => state.messagesCombine.messages);
+    const datetime = useSelector(state => state.messagesCombine.datetime);
     const loading = useSelector(state => state.messagesCombine.loading);
+
 
     const [message, setMessage] = useState({
         author: '',
@@ -16,7 +19,11 @@ const Messages = () => {
     });
 
     useEffect(() => {
-        dispatch(fetchMessages());
+        dispatch(fetchMessages(datetime));
+
+        setInterval( async () => {
+            dispatch(fetchMessages(datetime))
+        }, 6000);
     }, [dispatch]);
 
 
@@ -38,9 +45,7 @@ const Messages = () => {
     return (
         <>
             <Grid container direction="column" spacing={2}>
-                {loading
-                    ? <Spinner/>
-                    : <Grid item container spacing={3}>
+                <Grid item container spacing={3}>
                         {globalStateMessages.map(m => (
                             <Message
                                 key={m.id}
@@ -49,7 +54,7 @@ const Messages = () => {
                             />
                         ))}
                     </Grid>
-                }
+
             </Grid>
             <form onSubmit={onSubmitHandler}>
                 <input
