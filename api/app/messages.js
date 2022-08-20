@@ -3,7 +3,7 @@ const fileDb = require('../fileDb');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    const messages = fileDb.getMessages();
+    const messages = fileDb.getMessages().slice(-30);
     res.send(messages);
 });
 
