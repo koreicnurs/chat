@@ -22,8 +22,9 @@ const Messages = () => {
         let interval = setInterval(() => {
             dispatch(fetchMessages(datetime));
         }, 3000);
+        console.log(error);
         return () => clearInterval(interval);
-    }, [dispatch, datetime]);
+    }, [dispatch, datetime, error]);
 
     const onInputChange = (e) => {
         const {name, value} = e.target;
@@ -37,6 +38,7 @@ const Messages = () => {
     const onSubmitHandler = async e => {
         e.preventDefault();
         await dispatch(createMessage(message));
+
     };
 
     return !datetime ? <Spinner/> : globalStateMessages && (
@@ -50,7 +52,6 @@ const Messages = () => {
                             message={m.message}
                         />
                     ))}
-
                 </div>
             </Grid>
 
@@ -74,7 +75,7 @@ const Messages = () => {
                 {error ? <p></p> : null}
                 <Button variant='outlined' type='submit'>Create</Button>
             </form>
-            {error === null ? (<Error style={{display: 'none'}}/>) : (<Error error={error}/>)}
+            {error === null ? (<Error error={null} style={{display: 'none'}}/>) : (<Error error={error}/>)}
         </>
     );
 };

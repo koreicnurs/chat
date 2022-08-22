@@ -37,7 +37,6 @@ export const createMessage = (messageData) => {
             dispatch(createMessageSuccess);
         } catch (e) {
             dispatch({type: ERROR, payload: e.response.data.error});
-            throw e;
         }
     }
 };

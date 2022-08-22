@@ -41,6 +41,7 @@ form {
     display: flex;
     flex-wrap: wrap;
     margin: 20px;
+    justify-content: center;
 }
 
 @media (min-width: 600px) {
