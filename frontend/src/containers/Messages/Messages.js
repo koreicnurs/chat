@@ -22,9 +22,8 @@ const Messages = () => {
         let interval = setInterval(() => {
             dispatch(fetchMessages(datetime));
         }, 3000);
-        console.log(error);
         return () => clearInterval(interval);
-    }, [dispatch, datetime, error]);
+    }, [dispatch, datetime]);
 
     const onInputChange = (e) => {
         const {name, value} = e.target;
