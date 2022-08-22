@@ -6,29 +6,27 @@ export const FETCH_MESSAGES_FAILURE = 'FETCH_MESSAGES_FAILURE';
 
 export const CREATE_MESSAGE_REQUEST = 'CREATE_MESSAGE_REQUEST';
 export const CREATE_MESSAGE_SUCCESS = 'CREATE_MESSAGE_SUCCESS';
-export const CREATE_MESSAGE_FAILURE = 'CREATE_MESSAGE_FAILURE';
+export const ERROR = 'ERROR';
 
 const fetchMessagesRequest = () => ({type: FETCH_MESSAGES_REQUEST});
 const fetchMessagesSuccess = (messages, date) => ({type: FETCH_MESSAGES_SUCCESS, payload: {messages, date}});
-const fetchMessagesFailure = error => ({type: FETCH_MESSAGES_FAILURE, payload: error});
+const fetchMessagesFailure = error => ({type: FETCH_MESSAGES_FAILURE, payload: error.response});
 
 const createMessageRequest = () => ({type: CREATE_MESSAGE_REQUEST});
 const createMessageSuccess = () => ({type: CREATE_MESSAGE_SUCCESS});
-const createMessageFailure = error => ({type: CREATE_MESSAGE_FAILURE, payload: error});
 
 export const fetchMessages = (datetime) => {
     return async dispatch => {
         try {
             dispatch(fetchMessagesRequest());
-            const response = await axiosApi(datetime === null ? '/messages' : `/messages?datetime=${datetime}`);
-            if(datetime !== null) {
+            console.log(datetime);
+            const response = await axiosApi(datetime.length === 0 ? '/messages' : `/messages?datetime=${datetime}`);
+            if(response.data.length > 0) {
                 let lastDatetime = response.data[response.data.length - 1].datetime;
                 dispatch(fetchMessagesSuccess(response.data, lastDatetime));
             }
-            dispatch(fetchMessagesSuccess(response.data, datetime));
-
         } catch (e) {
-            dispatch(fetchMessagesFailure(e.message));
+            dispatch(fetchMessagesFailure(e.message))
             throw e
         }
     }
@@ -41,9 +39,8 @@ export const createMessage = (messageData) => {
             dispatch(createMessageRequest());
             await axiosApi.post('/messages', messageData);
             dispatch(createMessageSuccess);
-            // dispatch(createMessageSuccess(response.data));
         } catch (e) {
-            dispatch(createMessageFailure(e.message));
+            dispatch({type: ERROR, payload: e.response.data.error});
             throw e;
         }
     }

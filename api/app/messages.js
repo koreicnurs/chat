@@ -5,16 +5,21 @@ const router = express.Router();
 router.get('/', (req, res) => {
     const messages = fileDb.getMessages();
     const date = req.query.datetime;
+    const validDate = new Date(date);
     const queryArray = [];
-    if(date) {
-        messages.map(m => {
-            if(m.datetime > date) {
-                return queryArray.push(m)
-            }
-        });
-        return res.send(queryArray)
+    if(isNaN(validDate.getDate())) {
+        if(date) {
+            messages.map(m => {
+                if(m.datetime > date) {
+                    return queryArray.push(m)
+                }
+            });
+            return res.send(queryArray)
+        }
+        res.send(messages.slice(-30));
+    } else {
+        return res.status(400).send({error: 'Not correct data'});
     }
-    res.send(messages.slice(-30));
 });
 
 router.post('/', (req, res) => {

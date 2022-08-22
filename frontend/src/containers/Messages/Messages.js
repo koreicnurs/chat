@@ -4,12 +4,13 @@ import {createMessage, fetchMessages} from "../../store/actions/messagesActions"
 import {Button, Grid} from "@mui/material";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import Message from "../../components/Message/Message";
-import axiosApi from "../../axiosApi";
+import Error from "../../components/Error/Error";
 
 const Messages = () => {
     const dispatch = useDispatch();
     const globalStateMessages = useSelector(state => state.messagesCombine.messages);
     const datetime = useSelector(state => state.messagesCombine.datetime);
+    const error = useSelector(state => state.messagesCombine.error);
     const loading = useSelector(state => state.messagesCombine.loading);
 
 
@@ -19,12 +20,11 @@ const Messages = () => {
     });
 
     useEffect(() => {
-        dispatch(fetchMessages(datetime));
-
+        console.log(error);
         setInterval( async () => {
-            dispatch(fetchMessages(datetime))
+            await dispatch(fetchMessages(datetime));
         }, 6000);
-    }, [dispatch]);
+    }, [dispatch, error]);
 
 
     const onInputChange = (e) => {
@@ -39,10 +39,9 @@ const Messages = () => {
     const onSubmitHandler = async e => {
         e.preventDefault();
         await dispatch(createMessage(message));
-
     };
 
-    return (
+    return globalStateMessages && (
         <>
             <Grid container direction="column" spacing={2}>
                 <Grid item container spacing={3}>
@@ -73,8 +72,10 @@ const Messages = () => {
                     onChange={onInputChange}
                     placeholder="Your message"
                 />
+                {error ? <p></p> : null}
                 <Button variant='outlined' type='submit'>Create</Button>
             </form>
+            {error ? (<Error error={error}/>) : (<Error error={null}/>)}
         </>
     );
 };
