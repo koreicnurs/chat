@@ -1,11 +1,12 @@
 import React from 'react';
 import {Paper, Typography} from "@mui/material";
+import './Message.css';
 
 const Message = (props) => {
     return (
-        <Paper elevation={3} square sx={{padding: "15px"}}>
-            <Typography variant="h5">{props.author}</Typography>
-            <Typography variant="body2">{props.message}</Typography>
+        <Paper className='box-message' elevation={3} square>
+            <Typography variant="body2" className='text'><b>Author</b>: {props.author}</Typography>
+            <Typography variant="body2" className='text'><b>Message</b>: {props.message}</Typography>
         </Paper>
     );
 };

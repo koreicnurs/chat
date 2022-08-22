@@ -4,7 +4,7 @@ const fileDb = require('./fileDb');
 const cors = require('cors');
 
 const app = express();
-const port = 8001;
+const port = 8002;
 
 app.use(express.json());
 app.use(cors());

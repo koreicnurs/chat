@@ -19,19 +19,15 @@ export const fetchMessages = (datetime) => {
     return async dispatch => {
         try {
             dispatch(fetchMessagesRequest());
-            console.log(datetime);
-            const response = await axiosApi(datetime.length === 0 ? '/messages' : `/messages?datetime=${datetime}`);
-            if(response.data.length > 0) {
-                let lastDatetime = response.data[response.data.length - 1].datetime;
-                dispatch(fetchMessagesSuccess(response.data, lastDatetime));
-            }
+            const {data} = await axiosApi(datetime === null ? '/messages' : `/messages?datetime=${datetime}`);
+            const lastDatetime = data.length !== 0 ? data[data.length - 1].datetime : datetime;
+            dispatch(fetchMessagesSuccess(data, lastDatetime));
         } catch (e) {
-            dispatch(fetchMessagesFailure(e.message))
-            throw e
+            dispatch(fetchMessagesFailure(e.message));
+            throw e;
         }
     }
 };
-
 
 export const createMessage = (messageData) => {
     return async dispatch => {

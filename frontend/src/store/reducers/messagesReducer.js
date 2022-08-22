@@ -10,7 +10,7 @@ import {
 
 const initialState = {
     messages: [],
-    datetime: '',
+    datetime: null,
     loading: false,
     error: null,
 };
@@ -20,7 +20,7 @@ const messagesReducer = (state = initialState, action) => {
         case FETCH_MESSAGES_REQUEST:
             return {...state, loading: true};
         case FETCH_MESSAGES_SUCCESS:
-            return {...state, loading: false, messages: [...state.messages, action.payload.messages], datetime: action.payload.datetime};
+            return {...state, loading: false, messages: [...state.messages, ...action.payload.messages], datetime: action.payload.date};
         case FETCH_MESSAGES_FAILURE:
             return {...state, loading: false, error: action.payload};
 
@@ -29,8 +29,7 @@ const messagesReducer = (state = initialState, action) => {
         case CREATE_MESSAGE_SUCCESS:
             return {...state, loading: false};
         case ERROR:
-            return {...state, loading: false, error: action.payload};
-
+            return {...state, loading: false, error: action.payload !== null ? action.payload : null};
         default:
             return state;
     }

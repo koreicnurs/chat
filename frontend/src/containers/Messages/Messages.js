@@ -5,14 +5,13 @@ import {Button, Grid} from "@mui/material";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import Message from "../../components/Message/Message";
 import Error from "../../components/Error/Error";
+import './Messages.css';
 
 const Messages = () => {
     const dispatch = useDispatch();
     const globalStateMessages = useSelector(state => state.messagesCombine.messages);
     const datetime = useSelector(state => state.messagesCombine.datetime);
     const error = useSelector(state => state.messagesCombine.error);
-    const loading = useSelector(state => state.messagesCombine.loading);
-
 
     const [message, setMessage] = useState({
         author: '',
@@ -20,12 +19,11 @@ const Messages = () => {
     });
 
     useEffect(() => {
-        console.log(error);
-        setInterval( async () => {
-            await dispatch(fetchMessages(datetime));
-        }, 6000);
-    }, [dispatch, error]);
-
+        let interval = setInterval(() => {
+            dispatch(fetchMessages(datetime));
+        }, 3000);
+        return () => clearInterval(interval);
+    }, [dispatch, datetime]);
 
     const onInputChange = (e) => {
         const {name, value} = e.target;
@@ -41,21 +39,22 @@ const Messages = () => {
         await dispatch(createMessage(message));
     };
 
-    return globalStateMessages && (
+    return !datetime ? <Spinner/> : globalStateMessages && (
         <>
             <Grid container direction="column" spacing={2}>
-                <Grid item container spacing={3}>
-                        {globalStateMessages.map(m => (
-                            <Message
-                                key={m.id}
-                                author={m.author}
-                                message={m.message}
-                            />
-                        ))}
-                    </Grid>
+                <div className='messages-container'>
+                    {globalStateMessages.map(m => (
+                        <Message
+                            key={m.id}
+                            author={m.author}
+                            message={m.message}
+                        />
+                    ))}
 
+                </div>
             </Grid>
-            <form onSubmit={onSubmitHandler}>
+
+            <form className='form' onSubmit={onSubmitHandler}>
                 <input
                     type="text"
                     className="Input"
@@ -75,7 +74,7 @@ const Messages = () => {
                 {error ? <p></p> : null}
                 <Button variant='outlined' type='submit'>Create</Button>
             </form>
-            {error ? (<Error error={error}/>) : (<Error error={null}/>)}
+            {error === null ? (<Error style={{display: 'none'}}/>) : (<Error error={error}/>)}
         </>
     );
 };

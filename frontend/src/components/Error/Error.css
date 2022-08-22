@@ -1,4 +1,8 @@
 .error {
-    font-size: 20px;
-
+    font-size: 25px;
+    text-transform: capitalize;
+    color: #9650ff;
+    text-align: center;
+    margin-top: 20px;
+    font-family: Sawasdee;
 }

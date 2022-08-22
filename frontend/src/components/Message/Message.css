@@ -1,0 +1,11 @@
+.box-message {
+    background: #6cbfe3!important;
+    margin: 10px;
+    padding: 15px;
+}
+
+.text {
+    font-size: 18px!important;
+    color: #453e94;
+    text-align: center;
+}
